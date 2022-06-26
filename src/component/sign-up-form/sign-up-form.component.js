@@ -1,8 +1,8 @@
-// import { async } from '@firebase/util'
 import Button from '../../component/button/button.component'
-import React, { useState } from 'react'
+import React, { useState} from 'react'
 import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils'
 import FormInput from '../form-input/form-input.component'
+import './sign-up-form.styles.scss'
 
 const defaultFormFeilds = {
     displayName: '',
@@ -12,7 +12,6 @@ const defaultFormFeilds = {
 }
 
 const SignUpForm = () => {
-
     const [formFeilds, setFormFeilds] = useState(defaultFormFeilds)
     const { displayName, email, password, confirmPassword } = formFeilds
 
@@ -25,7 +24,6 @@ const SignUpForm = () => {
     const handleChange = (event) => {
         const { name, value } = event.target
         setFormFeilds({ ...formFeilds, [name]: value })
-        console.log(name + ' and ' + value)
     }
 
     const handleSubmit = async (event) => {
@@ -36,8 +34,7 @@ const SignUpForm = () => {
         }
         try {
             const { user } = await createAuthUserWithEmailAndPassword(email, password)
-            await createUserDocumentFromAuth(user, displayName)
-
+            await createUserDocumentFromAuth(user, {displayName})
             resetFormFeilds()
 
         } catch (error) {
@@ -50,7 +47,7 @@ const SignUpForm = () => {
     }
 
     return (
-        <div className='container col-md-10'>
+        <div className='sign-up-container'>
             <h2>Don't have an account?</h2>
             <span>Sign up with your email and password</span>
             <form onSubmit={handleSubmit} className='form' >
@@ -82,7 +79,7 @@ const SignUpForm = () => {
                     name='confirmPassword'
                     value={confirmPassword} />
 
-                <Button buttonType='inverted' type='submit' >Sign Up</Button>
+                <Button buttonType='inverted' type='submit' onChange={handleSubmit} Children='Sign Up'></Button>
             </form>
         </div>
     )
